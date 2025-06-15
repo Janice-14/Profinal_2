@@ -1,15 +1,13 @@
-
-
-
-#include <iostream>
+#include <iostream> 
 #include <iomanip>
-#include <vector>
+#include <vector> // Es para vectores
 #include <string>
 #include <limits>
+#ifdef _WIN32
+#include <windows.h> // Para manejo de colores en consola Windows
+#endif
 using namespace std;
 
-
-// Estructura para guardar datos del alumno, almacena tipos de datos similares, diferentes o una combinación de ambos
 struct Alumno {
     string nombre;
     string apellido1;
@@ -20,7 +18,6 @@ struct Alumno {
     float promedio;
 };
 
-// Función para calcular el promedio de 5 notas
 float calcularPromedio(const float notas[], int cantidad) {
     float suma = 0;
     for (int i = 0; i < cantidad; i++) {
@@ -66,7 +63,7 @@ int main() {
         alumnos.push_back(a);
     }
 
-    // Mostrar los resultados
+    // Mostrar todos los alumnos con promedio
     cout << "\n======= LISTA DE ALUMNOS CON PROMEDIO =======\n";
     cout << left << setw(30) << "Nombre completo"
          << setw(12) << "Cédula"
@@ -81,6 +78,36 @@ int main() {
              << setw(12) << a.cedula
              << setw(8)  << a.ciclo
              << fixed << setprecision(2) << a.promedio << endl;
+    }
+
+    // Mostrar sólo los aprobados (promedio >= 70) en color verde
+#ifdef _WIN32
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    const int COLOR_VERDE = 10; // Verde claro
+#endif
+
+    cout << "\n======= LISTA DE APROBADOS (PROMEDIO >= 70) =======\n";
+    cout << left << setw(30) << "Nombre completo"
+         << setw(12) << "Cédula"
+         << setw(8)  << "Ciclo"
+         << "Promedio" << endl;
+
+    cout << "-------------------------------------------------------------\n";
+
+    for (const Alumno& a : alumnos) {
+        if (a.promedio >= 70) {
+            string nombreCompleto = a.nombre + " " + a.apellido1 + " " + a.apellido2;
+#ifdef _WIN32
+            SetConsoleTextAttribute(hConsole, COLOR_VERDE);
+#endif
+            cout << left << setw(30) << nombreCompleto
+                 << setw(12) << a.cedula
+                 << setw(8)  << a.ciclo
+                 << fixed << setprecision(2) << a.promedio << endl;
+#ifdef _WIN32
+            SetConsoleTextAttribute(hConsole, 7); // Volver al color normal (blanco)
+#endif
+        }
     }
 
     return 0;
