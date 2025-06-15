@@ -1,4 +1,4 @@
-#include <iostream> 
+#include <iostream>  
 #include <iomanip>
 #include <vector> // Es para vectores
 #include <string>
@@ -84,6 +84,7 @@ int main() {
 #ifdef _WIN32
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     const int COLOR_VERDE = 10; // Verde claro
+    const int COLOR_ROJO = 12;  // Rojo claro
 #endif
 
     cout << "\n======= LISTA DE APROBADOS (PROMEDIO >= 70) =======\n";
@@ -105,7 +106,32 @@ int main() {
                  << setw(8)  << a.ciclo
                  << fixed << setprecision(2) << a.promedio << endl;
 #ifdef _WIN32
-            SetConsoleTextAttribute(hConsole, 7); // Volver al color normal (blanco)
+            SetConsoleTextAttribute(hConsole, 7); // Volver al color normal
+#endif
+        }
+    }
+
+    // Mostrar sólo los reprobados (promedio < 70) en color rojo
+    cout << "\n======= LISTA DE REPROBADOS (PROMEDIO < 70) =======\n";
+    cout << left << setw(30) << "Nombre completo"
+         << setw(12) << "Cédula"
+         << setw(8)  << "Ciclo"
+         << "Promedio" << endl;
+
+    cout << "-------------------------------------------------------------\n";
+
+    for (const Alumno& a : alumnos) {
+        if (a.promedio < 70) {
+            string nombreCompleto = a.nombre + " " + a.apellido1 + " " + a.apellido2;
+#ifdef _WIN32
+            SetConsoleTextAttribute(hConsole, COLOR_ROJO);
+#endif
+            cout << left << setw(30) << nombreCompleto
+                 << setw(12) << a.cedula
+                 << setw(8)  << a.ciclo
+                 << fixed << setprecision(2) << a.promedio << endl;
+#ifdef _WIN32
+            SetConsoleTextAttribute(hConsole, 7); // Volver al color normal
 #endif
         }
     }
